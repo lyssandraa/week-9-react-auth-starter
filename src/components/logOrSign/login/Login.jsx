@@ -1,28 +1,17 @@
 import { useState } from "react";
 
 import "./Login.css";
+import { logIn } from "../../../utils/fetch";
 
 const Login = ({ handleChange, handleSubmit, logOrSignSetters }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const testLogin = (username, password) => {
-    console.log("test is working");
-    console.log(username, password);
-    return {
-      message: "success",
-      user: {
-        id: 1,
-        username: "michael",
-      },
-    };
-  };
-
   return (
     <div className="flex flex-column login">
       <form
         onSubmit={(e) =>
-          handleSubmit(e, testLogin, logOrSignSetters, username, password)
+          handleSubmit(e, logIn, logOrSignSetters, username, password)
         }
         className="flex flex-column login-form"
       >

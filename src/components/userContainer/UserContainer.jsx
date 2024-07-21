@@ -3,51 +3,42 @@ import { useEffect, useState } from "react";
 import UserCard from "./userCard/UserCard";
 
 import "./UserContainer.css";
+import { getAllUsers } from "../../utils/fetch";
 
-const UserContainer = ({ isLoggedIn }) => {
+const UserContainer = ({ loggedUser, isLoggedIn }) => {
   const [users, setUsers] = useState([]);
+  const [message, setMessage] = useState("");
+
+  console.log("logged user in usercontainer", loggedUser.user.token);
 
   useEffect(() => {
-    async function fetchUsers() {
-      const data = await testUseEffect();
-      console.log(data);
-      await setUsers(data.users);
-    }
+    const fetchUsers = async () => {
+      const data = await getAllUsers(
+        loggedUser.user.token,
+        loggedUser.user.role
+      );
+      console.log("Fetched users:", data.users);
+      if (data.message === "Access forbidden: Insufficient privileges") {
+        setMessage("Access denied: You do not have sufficient privileges.");
+        setUsers([]);
+      } else if (data.message) {
+        setMessage(data.message);
+        setUsers([]);
+      } else {
+        setUsers(data.users || []);
+        setMessage("");
+      }
+    };
 
     fetchUsers();
   }, [isLoggedIn]);
 
-  const testUseEffect = () => {
-    console.log("useEffect in usercontainer is working");
-    return {
-      users: [
-        { id: 1, username: "dave" },
-        { id: 2, username: "jane" },
-        { id: 3, username: "sarah" },
-        { id: 4, username: "chris" },
-        { id: 5, username: "horatio" },
-        { id: 6, username: "jake" },
-        { id: 7, username: "charlotte" },
-        { id: 8, username: "jenny" },
-        { id: 9, username: "john" },
-        { id: 10, username: "alex" },
-        { id: 11, username: "shaun" },
-        { id: 12, username: "jamie" },
-        { id: 13, username: "abid" },
-        { id: 14, username: "jono" },
-        { id: 15, username: "jo" },
-        { id: 16, username: "julie" },
-        { id: 17, username: "naomi" },
-        { id: 18, username: "liz" },
-      ],
-    };
-  };
-
   return (
     <div className="flex flex-column container">
+      {message && <p>{message}</p>}
       <div className="flex flex-row inner-container user-inner-container">
         {users.length >= 1 ? (
-          users.map((user) => <UserCard user={user} />)
+          users.map((user) => <UserCard key={user.id} user={user} />)
         ) : (
           <p>No users</p>
         )}

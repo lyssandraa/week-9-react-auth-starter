@@ -8,7 +8,7 @@ import UserContainer from "./components/userContainer/UserContainer";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedUser, setLoggedUser] = useState(false);
+  const [loggedUser, setLoggedUser] = useState(null);
 
   const logOrSignSetters = {
     isLoggedIn,
@@ -21,7 +21,7 @@ function App() {
     <div className="flex flex-column container">
       <Layout loggedUser={loggedUser}>
         {isLoggedIn ? (
-          <UserContainer isLoggedIn={isLoggedIn} />
+          <UserContainer isLoggedIn={isLoggedIn} loggedUser={loggedUser} />
         ) : (
           <LogOrSign logOrSignSetters={logOrSignSetters} />
         )}
